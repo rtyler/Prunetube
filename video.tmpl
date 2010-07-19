@@ -1,0 +1,68 @@
+<?php
+
+\$secret = "prunejuicevideos";
+\$uri_prefix = "/dl/";
+
+# filename
+\$f = "${link}";
+
+# current timestamp
+
+\$t = time();
+
+\$t_hex = sprintf("%08x", \$t);
+\$m = md5(\$secret.\$f.\$t_hex);
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+
+	Spring Bloom by christopher robinson
+	http://www.edg3.co.uk/
+	hope you enjoy it and find it usefull :)
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head profile="http://gmpg.org/xfn/11">
+    <title>Prunetube -- ${title}</title>
+	<link rel="stylesheet" href="style.css" type="text/css" media="screen" />
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <script src="/flowplayer/flowplayer-3.2.2.min.js"></script>
+</head>
+<body>
+	<div id="header">
+        <h1>Prunetube!</h1>
+	</div>
+    <br clear="all"/>
+	<div id="content">
+		<div id="sidebar">
+			<h1>About this Video</h1>
+            <p>
+                ${info}
+            </p>
+            <h1>Navigation</h1>
+            <p>
+                <a href="index.html">Back home</a>
+            </p>
+		</div>
+		<div id="main">
+            <center>
+                <h1>${title}</h1>
+                <br/>
+                <a  
+                    href="<?php printf('%s%s/%s%s', \$uri_prefix, \$m, \$t_hex, \$f, \$f); ?>"
+                    style="display:block;width:520px;height:330px"  
+                    id="player"> 
+                </a> 
+            </center>
+            <script>
+                flowplayer("player", "/flowplayer/flowplayer-3.2.2.swf");
+            </script>
+        </div>
+    </div>
+	<div id="footer">
+		<p>Prunetube, and the Prunejuice network are operated by <a href="http://unethicalblogger.com">R. Tyler Ballance</a>. You can contact me at <a href="mailto:tyler@linux.com">tyler@linux.com</a></p>
+	</div>
+</body>
+</html>
