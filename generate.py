@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
+import collections
 import json
+import operator
 import optparse
 import os
 import shutil
@@ -10,6 +12,7 @@ import sys
 from Cheetah import Template
 
 INDEX_TMPL = os.path.abspath('index.tmpl')
+SHOW_TMPL = os.path.abspath('show.tmpl')
 VIDEO_TMPL = os.path.abspath('video.tmpl')
 STATICS = os.path.abspath('static')
 THUMBNAIL_TIME = 60
@@ -62,7 +65,8 @@ def main():
 
     print '>>> Discovered %d videos:\n\n\t %s' % (len(files), '\n\t '.join(files))
 
-    pages = []
+    tv = {}
+    movies = []
 
     with open(VIDEO_TMPL, 'r') as fd:
         template = fd.read()
@@ -74,13 +78,20 @@ def main():
             name = name.replace(' ', '_')
 
             filename = '%s.php' % name
-
+            pieces = [p for p in link.split(os.path.sep) if p]
             title = os.path.basename(link[:-4])
-            infopath = '%s.info' % f
-            info = 'No information available'
-            if os.path.exists(infopath):
-                with open(infopath, 'r') as infofd:
-                    info = '<br/>\n'.join(infofd.readlines())
+            isTV = False
+            showName = None
+            showSeason = None
+            info = 'No info'
+            if pieces and pieces[0]:
+                # Assuming that televisions shows are
+                # .../television/SHOW/SEASON/...
+                if pieces[0] == 'television':
+                    isTV = True
+                    showName = pieces[1]
+                    showSeason = pieces[2]
+                    info = '%s<br/>%s<br/>' % (pieces[1], pieces[2])
 
 
             videopage = Template.Template(template, searchList=[{'link' : link,
@@ -90,7 +101,17 @@ def main():
                 wfd.write(str(videopage))
 
             thumbnail = generateThumbnail(f, output, filename)
-            pages.append((title, filename, thumbnail, info))
+            if not isTV:
+                movies.append((title, filename, thumbnail, info))
+                continue
+        
+            if not tv.has_key(showName):
+                tv[showName] = {}
+            if not tv[showName].has_key(showSeason):
+                tv[showName][showSeason] = []
+
+            tv[showName][showSeason].append((title, filename, thumbnail, info))
+
 
     print
     print '>>> Copying static files into %s' % output
@@ -104,9 +125,17 @@ def main():
         except Exception, ex:
             print ('Exception processing', path, ex)
 
+    with open(SHOW_TMPL, 'r') as fd:
+        template = fd.read().decode('utf-8')
+        for show, episodes in tv.iteritems():
+            showpage = Template.Template(template, searchList=[{'show' : show, 'shows' : episodes}])
+            with open(os.path.join(output, '%s.html' % show), 'w') as wfd:
+                wfd.write(str(showpage))
+
+
     with open(INDEX_TMPL, 'r') as fd:
         template = fd.read().decode('utf-8')
-        indexpage = Template.Template(template, searchList=[{'pages' : pages}])
+        indexpage = Template.Template(template, searchList=[{'tv' : tv, 'movies' : movies}])
         with open(os.path.join(output, 'index.html'), 'w') as wfd:
             wfd.write(str(indexpage))
     return 0

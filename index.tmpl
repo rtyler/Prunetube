@@ -13,8 +13,19 @@
         <div id="content">
             <div id="sidebar">
             </div>
-            <div id="main" style="float: center; width: 1200px;">
-                #for $page in $pages
+            <div id="main" style="float: none; margin-left: auto; margin-right: auto; width: 900px;">
+                <h1>Television</h1>
+                <br clear="all"/>
+                <ul>
+                #for $page in $tv.iterkeys()
+                    <li><a href="${page}.html"><big>${page}</big></a> 
+                        (${len($tv[$page])} seasons, ${len(reduce(lambda l, r: l + r, $tv[$page].itervalues()))} episodes)</li>
+                #end for
+                </ul>
+                <br/>
+                <br/>
+                <h1>Movies</h1>
+                #for $page in $movies
                     <div style="float: left;">
                         <table border="0">
                             <tr><td colspan=2><h2>$page[0]</h2></td></tr>
@@ -22,7 +33,9 @@
                                 <td>
                                     <a href="${page[1]}"><img src="${page[2]}" title="${page[0]}"/></a>
                                 </td>
-                                <td>${page[3]}</td>
+                            </tr>
+                            <tr>
+                                <td align="center">${page[3]}</td>
                             </tr>
                         </table>
                     </div>
