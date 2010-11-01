@@ -15,7 +15,7 @@ INDEX_TMPL = os.path.abspath('index.tmpl')
 SHOW_TMPL = os.path.abspath('show.tmpl')
 VIDEO_TMPL = os.path.abspath('video.tmpl')
 STATICS = os.path.abspath('static')
-THUMBNAIL_TIME = 60
+THUMBNAIL_TIME = 120
 
 def findVideos(folder):
     for root, dirs, files in os.walk(folder, followlinks=True):
