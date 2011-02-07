@@ -19,7 +19,7 @@
 
 	Spring Bloom by christopher robinson
 	http://www.edg3.co.uk/
-	hope you enjoy it and find it usefull :)
+	hope you enjoy it and find it useful :)
 
 -->
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -32,34 +32,27 @@
 </head>
 <body>
 	<div id="header">
-        <h1>Prunetube!</h1>
+        <h1><a href="/">Prunetube</a></h1>
 	</div>
     <br clear="all"/>
 	<div id="content">
-		<div id="sidebar">
-			<h1>About this Video</h1>
-            <p>
-                ${info}
-            </p>
-            <h1>Navigation</h1>
-            <p>
-                <a href="javascript:history.go(-1);">back</a>
-            </p>
-		</div>
-		<div id="main">
+        #if $show
+            <a href="${show}.html">Back to <strong>${show}</strong></a>
+        #end if
+        <br clear="all"/>
+        <br clear="all"/>
             <center>
                 <h1>${title}</h1>
                 <br/>
-                <a  
+                <a
                     href="<?php printf('%s%s/%s%s', \$uri_prefix, \$m, \$t_hex, \$f, \$f); ?>"
-                    style="display:block;width:520px;height:330px"  
-                    id="player"> 
-                </a> 
+                    style="display:block;width:640px;height:480px"
+                    id="player">
+                </a>
             </center>
             <script>
                 flowplayer("player", "/flowplayer/flowplayer-3.2.2.swf");
             </script>
-        </div>
     </div>
 	<div id="footer">
 		<p>Prunetube, and the Prunejuice network are operated by <a href="http://unethicalblogger.com">R. Tyler Croy</a>. You can contact me at <a href="mailto:tyler@linux.com">tyler@linux.com</a></p>

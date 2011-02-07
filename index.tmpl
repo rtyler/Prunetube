@@ -25,13 +25,13 @@
                 <br/>
                 <br/>
                 <h1>Movies</h1>
-                #for $page in $movies
+                #for $page in $sorted($movies, key=lambda m: m[0])
                     <div style="float: left;">
                         <table border="0">
                             <tr><td colspan=2><h2>$page[0]</h2></td></tr>
                             <tr>
                                 <td>
-                                    <a href="${page[1]}"><img src="${page[2]}" title="${page[0]}"/></a>
+                                    <a href="${page[1]}"><img src="${page[2]}" title="${page[0]}" width="220"/></a>
                                 </td>
                             </tr>
                             <tr>

@@ -8,6 +8,7 @@ import os
 import shutil
 import subprocess
 import sys
+import urllib
 
 from Cheetah import Template
 
@@ -15,7 +16,7 @@ INDEX_TMPL = os.path.abspath('index.tmpl')
 SHOW_TMPL = os.path.abspath('show.tmpl')
 VIDEO_TMPL = os.path.abspath('video.tmpl')
 STATICS = os.path.abspath('static')
-THUMBNAIL_TIME = 120
+THUMBNAIL_TIME = 180
 
 def findVideos(folder):
     for root, dirs, files in os.walk(folder, followlinks=True):
@@ -34,7 +35,6 @@ def generateThumbnail(fullpath, output, page):
     image = page.replace('.php', '.jpg')
     output = os.path.join(output, image)
     if os.path.exists(output):
-        print '>>> Thumbnail exists!'
         return image
 
     print '>>> Generating thumbnail for %s' % fullpath
@@ -93,9 +93,8 @@ def main():
                     showSeason = pieces[2]
                     info = '%s<br/>%s<br/>' % (pieces[1], pieces[2])
 
-
             videopage = Template.Template(template, searchList=[{'link' : link,
-                'name' : name, 'title' : title, 'info' : info}])
+                'name' : name, 'title' : title, 'info' : info, 'show' : showName}])
 
             with open(os.path.join(output, filename), 'w') as wfd:
                 wfd.write(str(videopage))
